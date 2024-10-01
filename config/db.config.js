@@ -15,7 +15,7 @@ dbConn.connect(function(err) {
   /* ************************* 
    CRIAÇÃO DO BANCO DE DADOS   
   /* ************************* */
-  var dbName = "Monitorar-Vigencias"; 
+  var dbName = "GESvigencias"; 
   dbConn.query("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", dbName, function(err, result) {
     if (err) throw err;
     if (result.length > 0) {

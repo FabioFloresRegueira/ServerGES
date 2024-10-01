@@ -4,12 +4,12 @@ var dbConn = require('../../config/db.config');
 // Tabela Cliente e Seus Atributos
 var Tags = function(tags){
   this.iDTag = tags.iDTag;
-  this.descicao  = tags.descricao; 
+  this.descricao  = tags.descricao; 
   this.categoria = tags.categoria; 
   this.infor = tags.infor; 
   this.vigencia = tags.vigencia;
   this.foto  = tags.foto;
-  this.status         = tags.status ? tags.status : 1;
+  this.status         = tags.status ?? 0;
   this.created_at     = new Date();
   this.updated_at     = new Date();
 };
@@ -30,7 +30,12 @@ Tags.create = function (newTags, result) {
 
 // Metodo: Busca / Lista uma tag de monitoramento de serviço por ID. 
 Tags.findById = function (id, result) {
-    dbConn.query("Select * from tags where iDTag = ? ", id, function (err, res) {
+
+  var xSql = 'SELECT iDTag, descricao, categoria, infor, vigencia, status, created_at, updated_at, ';
+      xSql += 'DATEDIFF(vigencia,CURDATE()) as Diasvigencia ';
+      xSql += 'FROM tags '; 
+
+  dbConn.query(xSql + "where iDTag = ? ", id, function (err, res) {
     if(err) {
       console.log("error: ", err);
       result(err, null);
@@ -40,7 +45,6 @@ Tags.findById = function (id, result) {
     }
   });
 };
-
 
 
 // Metodo: Lista todas as tags de serviço.
