@@ -27,3 +27,8 @@ run http://192.168.0.85:3001/clube/api/...
 # Links 
 https://medium.com/@rahulguptalive/create-crud-apis-in-nodejs-express-and-mysql-abda4dfc2d6
 https://www.w3schools.com/nodejs/nodejs_mysql_create_db.asp
+# envio de e-mail atraves do node.js
+https://mailtrap.io/pt/blog/send-emails-with-nodejs/
+https://mailtrap.io/pt/
+https://medium.com/@gabrielrufino.js/nodemailer-o-pombo-correio-do-node-js-7f70524c4735
+
