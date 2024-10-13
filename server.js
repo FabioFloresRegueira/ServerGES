@@ -14,7 +14,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.get('/', (req, res) => {
-  res.send("API Monitoramento das Vigencias de Serviços | Servidor em Execução . . . ");
+  res.send("API Gestão Eletronica de Serviços | Servidor em Execução . . . ");
 });
 
 // ROTAS 
@@ -23,5 +23,5 @@ app.use('/monitorar/api/tags', clienteRoutes)
 
 // Servidor
 app.listen(port, () => {
-  console.log(`O SERVIDOR ESTÁ SENDO EXECUTADO NA PORTA: ${port}`);
+  console.log(`SERVIÇOS CRUD ESTÃO SENDO EXECUTADOS NA PORTA: ${port}`);
 });
