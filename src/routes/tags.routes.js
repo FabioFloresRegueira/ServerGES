@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router()
 const tagsController =   require('../controllers/tags.controller');
 
+// endpoint no integrator host
+// https://fabio4678.c44.integrator.host/monitorar/api/tags/todo
+
+
 // lista todos os Tags de serviço
 //http://localhost:3001/monitorar/api/tags/todos
 router.get('/todos', tagsController.findAll);

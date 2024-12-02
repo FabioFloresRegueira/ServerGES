@@ -1,13 +1,12 @@
 'use strict';
 const Tags = require('../models/tags');
 
-
 // Controler: Lista todas as Tags de monitoramento.
 exports.findAll = function(req, res) {
     Tags.findAll(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -17,7 +16,7 @@ exports.findAllativos = function(req, res) {
     Tags.findAllativos(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -28,7 +27,7 @@ exports.find0a30 = function(req, res) {
     Tags.find0a30(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -38,7 +37,7 @@ exports.find31a60 = function(req, res) {
     Tags.find31a60(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -48,7 +47,7 @@ exports.find61a90 = function(req, res) {
     Tags.find61a90(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -58,7 +57,7 @@ exports.findmaior90 = function(req, res) {
     Tags.findmaior90(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
@@ -69,10 +68,20 @@ exports.findAllinativos = function(req, res) {
     Tags.findAllinativos(function(err, tags) {
     if (err)
         res.send(err);
-        console.log('res', tags);
+        //console.log('res', tags);
         res.send(tags);
     });
 };
+
+// Controler: Lista uma Tag de Monitoramento de Serviço. 
+exports.findById = function(req, res) {
+    Tags.findById(req.params.id, function(err, tags) {
+        if (err)
+            res.send(err);
+            res.json(tags);
+        });
+    };
+    
 
 // Controler: Cria uma Tag de monitoramento de serviço. 
 exports.create = function(req, res) {
@@ -81,24 +90,17 @@ const new_tags = new Tags(req.body);
         res.status(400).send({ error:true, message: 'Por favor, forneça todos os campos obrigatórios.' });
         } else{
             Tags.create(new_tags, function(err, tags) {
-        if (err)
-            res.send(err);
-            res.json({
-                error:false,
-                message:"Tag de monitoramento de serviço adicionada com sucesso. . . ", 
-                data:tags});
-        });
-    }
+            if (err)
+                res.send(err);
+                //console.log('res', tags);
+                res.json({
+                    error:false,
+                    message:"Tag de monitoramento de serviço adicionada com sucesso. . . ", 
+                    data:tags});
+            });
+        }
 };
 
-// Controler: Lista uma Tag de Monitoramento de Serviço. 
-exports.findById = function(req, res) {
-Tags.findById(req.params.id, function(err, tags) {
-    if (err)
-        res.send(err);
-        res.json(tags);
-    });
-};
 
 // Controler: Atualiza uma Tag de Monitoramento de Serviço por ID.
 exports.update = function(req, res) {
@@ -108,6 +110,7 @@ exports.update = function(req, res) {
         Tags.update(req.params.id, new Tags(req.body), function(err, tags) {
         if (err)
             res.send(err);
+            //console.log('res', tags);
             res.json({ error:false, 
                 message: 'Tag de monitoramento de serviço atualizada com sucesso. . . ' });
         });

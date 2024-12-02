@@ -1,5 +1,5 @@
 'use strict';
-var dbConn = require('../../config/db.config');
+var dbConn = require('../config/dbconfig');
 
 // Tabela Cliente e Seus Atributos
 var Tags = function(tags){
@@ -7,26 +7,13 @@ var Tags = function(tags){
   this.descricao  = tags.descricao; 
   this.categoria = tags.categoria; 
   this.infor = tags.infor; 
-  this.vigencia = tags.vigencia;
+  this.vigencia = new Date(tags.vigencia); 
   this.foto  = tags.foto;
   this.status         = tags.status ?? 0;
   this.created_at     = new Date();
   this.updated_at     = new Date();
 };
 
-// Metodo: Cria uma tag de monitoramento de serviço.
-Tags.create = function (newTags, result) {
-  dbConn.query("INSERT INTO tags set ?", newTags, function (err, res) {
-    if(err) {
-      console.log("error: ", err);
-      result(err, null);
-    }
-    else{
-      console.log(res.insertId);
-      result(null, res.insertId);
-    }
-  });
-};
 
 // Metodo: Busca / Lista uma tag de monitoramento de serviço por ID. 
 Tags.findById = function (id, result) {
@@ -50,15 +37,10 @@ Tags.findById = function (id, result) {
 // Metodo: Lista todas as tags de serviço.
 Tags.findAll = function (result) {
 
-  var xSql = 'SELECT iDTag, descricao, categoria, infor, vigencia, status, created_at, updated_at, ';
-      xSql += 'DATEDIFF(vigencia, CURDATE()) as Diasvigencia ';  
-      xSql += 'FROM tags '  
-      xSql += 'WHERE (DATEDIFF(vigencia, CURDATE()) < 0 ) ';
-      xSql += 'OR (DATEDIFF(vigencia, CURDATE()) BETWEEN 0  AND 30) ';  
-      xSql += 'OR (DATEDIFF(vigencia, CURDATE()) BETWEEN 31 AND 60) '; 
-      xSql += 'OR (DATEDIFF(vigencia, CURDATE()) BETWEEN 61 AND 90) '; 
-      xSql += 'OR DATEDIFF(vigencia, CURDATE()) > 90 ';   
-      xSql += 'ORDER BY Diasvigencia '
+  var xSql = "SELECT iDTag, descricao, categoria, infor, vigencia, status, created_at, updated_at, ";
+      xSql += "DATEDIFF(vigencia, CURDATE()) as Diasvigencia ";  
+      xSql += "FROM tags "  
+      xSql += "ORDER BY status desc, Diasvigencia "
 
     dbConn.query(xSql, function (err, res) {
     if(err) {
@@ -88,11 +70,33 @@ Tags.findAllativos = function (result) {
       result(null, err);
     }
     else{
-      console.log('Tags : ', res);
+      //console.log('Tags : ', res);
       result(null, res);
     }
   });
 };
+
+
+// Metodo: lista as tags de serviços ativas p/a envio no e-mail.
+Tags.emailAllativos = function (result) {
+
+  var xSql = 'SELECT descricao as DESCRIÇÃO, categoria as CATEGORIA, DATE_FORMAT(vigencia, "%d/%m/%Y") as VIGÊNCIA, DATEDIFF(vigencia,CURDATE()) as DIASRESTANTES, infor as INFORMAÇÕES ';
+      xSql += 'FROM tags '; 
+      xSql += 'WHERE status =1 ';  
+      xSql += 'ORDER BY DIASRESTANTES'
+
+    dbConn.query(xSql, function (err, res) {
+    if(err) {
+      console.log("error: ", err);
+      result(null, err);
+    }
+    else{
+      //console.log('Tags : ', res);
+      result(null, res);
+    }
+  });
+};
+
 
 // Metodo: Lista todas as tags de serviço que estão ativas 0 a 30 dias para o termino de vigencia .
 Tags.find0a30 = function(result){
@@ -109,7 +113,7 @@ Tags.find0a30 = function(result){
       result(null, err);
     }
     else{
-      console.log('Tags : ', res);
+      //console.log('Tags : ', res);
       result(null, res);
     }
     });
@@ -130,7 +134,7 @@ Tags.find31a60 = function(result){
       result(null, err);
     }
     else{
-      console.log('Tags : ', res);
+      //console.log('Tags : ', res);
       result(null, res);
     }
     });
@@ -151,7 +155,7 @@ Tags.find61a90 = function(result){
       result(null, err);
     }
     else{
-      console.log('Tags : ', res);
+      //console.log('Tags : ', res);
       result(null, res);
     }
     });
@@ -172,7 +176,7 @@ Tags.findmaior90 = function(result){
     result(null, err);
   }
   else{
-    console.log('Tags : ', res);
+    //console.log('Tags : ', res);
     result(null, res);
   }
   });
@@ -193,18 +197,36 @@ Tags.findAllinativos = function (result) {
       result(null, err);
     }
     else{
-      console.log('Tags : ', res);
+      //console.log('Tags : ', res);
       result(null, res);
     }
   });
 };
 
 
+// Metodo: Cria uma tag de monitoramento de serviço.
+Tags.create = function (newTags, result) {
+  
+  const xSql = "INSERT INTO tags (iDTag, descricao, categoria, infor, vigencia, foto, status, created_at, updated_at)  VALUES (?,?,?,?,?,?,?,?,?) "; 
+  const values = [newTags.iDTag, newTags.descricao, newTags.categoria, newTags.infor, newTags.vigencia, newTags.foto, newTags.status, newTags.created_at, newTags.updated_at]; // Substitua coluna1 e coluna2 pelos nomes reais das colunas
+
+  dbConn.query(xSql, values, function (err, res) {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+    } else {
+      result(null, res.insertId);
+    }
+  });
+};
+
 // Metodo: Atualiza uma Tag de serviço por ID.
 Tags.update = function(id, tags, result){
 
   var xSql  = 'UPDATE tags SET '; 
-      xSql += 'descricao=?, categoria=?, infor=?, vigencia=?, foto=?, '; 
+      xSql += 'descricao=?, categoria=?, infor=?, '; 
+      xSql += ' vigencia = ?, '; 
+      xSql += 'foto=?, '; 
       xSql += 'status=?, updated_at=? ';
       xSql += 'WHERE iDTag = ?' 
 

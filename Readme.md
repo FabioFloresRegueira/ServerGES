@@ -9,12 +9,30 @@ run npm install body-parser --save
 
 # MySQL | interagir com o banco de dados e manipular os registros.
 run npm install mysql --save
+run npm uninstall mysql 
+
+# versão nova do mysql
+npm install --save mysql2
+# se  usqando o Typ precisará instalar o @types/node.
+npm install --save-dev @types/node
+
 
 # Nodemon | é uma ferramenta que ajuda a desenvolver aplicativos baseados em node.js, reiniciando automaticamente o aplicativo de nó quando alterações de arquivo no diretório são detectadas. Use flag para salvar em devDependencies e salvará as dependências em package.json
 run npm install --save-dev nodemon
 
 # Cors | Habilite o CORS no seu servidor:
 run npm install cors
+
+# Nodemailer é um módulo para aplicativos Node.js que permite fácil envio de e-mails
+# https://nodemailer.com/
+run npm install nodemailer
+
+# O módulo node-cron é um pequeno agendador de tarefas em JavaScript puro para node.js
+# https://www.npmjs.com/package/node-cron  |  https://nodecron.com/docs/
+run npm install --save node-cron
+
+# Esta biblioteca ajuda a carregar variáveis de ambiente de um arquivo .env para o process.env no Node.js. Você pode instalá-la usando o comando:
+npm install dotenv
 
 # Executar o Servidor 
 run node server.js 
